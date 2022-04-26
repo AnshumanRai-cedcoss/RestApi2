@@ -5,15 +5,20 @@ namespace Api\Handlers;
 use Phalcon\Di\Injectable;
 
 /**
- * Producr Handler class
+ * Producr Controller
  * to handle all the product requests
  */     
 class Product extends Injectable
 {
+
     function createToken()
-    {
-        
+    { 
     }
+    /**
+     * allProducts Action
+     * To get all the products
+     * @return void
+     */
     function allProducts()
     {
         $result = $this->mongo->product->find();

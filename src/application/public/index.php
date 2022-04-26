@@ -17,6 +17,7 @@ require_once('../vendor/autoload.php');
 // Define some absolute path constants to aid in locating resources
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
+define('BASE_URI',$_SERVER["HTTP_HOST"]);
 
 // Register an autoloader
 $loader = new Loader();
@@ -31,7 +32,7 @@ $loader->registerDirs(
 $loader->register();
 $loader->registerNamespaces(
     [
-        'Apps\Components' => APP_PATH . '/components'
+        'App\Components' => APP_PATH . '/components'
     ]
 );
 

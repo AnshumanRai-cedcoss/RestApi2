@@ -9,9 +9,7 @@ class UserController extends Controller
     public function indexAction()
     {
         if ($this->request->has('addUser')) {
-
             $data = $this->request->getPost();
-            print_r($data);
             $key = "example_key";
             $payload = array(
                 "iss" => "http://example.org",
@@ -23,41 +21,38 @@ class UserController extends Controller
                 "email" =>  $data["email"],
                 "fsf" => "https://phalcon.io"
             );
-
-            /**
-             * IMPORTANT:
-             * You must specify supported algorithms for your application. See
-             * https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40
-             * for a list of spec-compliant algorithms.
-             */
             $jwt = JWT::encode($payload, $key, 'HS256');
-            $f = 0;
 
-            $a = $this->mongo->users->findOne([
-
-                "email" => $data['email']
-            ]);
-            if (count($a) > 0) {
-                $f = 1;
-                $this->view->msg = "Email Must Be Unique!!";
-            }
-
-            /**
-             * Storing All Details in DB
-             */
-            if ($f == 0) {
+            $result = $this->mongo->users->findOne(["email" => $data['email']]);
+            if (count($result) <= 0) {
                 $this->mongo->users->insertOne([
-
                     "name" => $data['uName'],
                     "email" => $data['email'],
                     "password" => $data['password'],
                     "role" => "user",
                     "token" => $jwt
-
                 ]);
-
                 $this->view->token = $jwt;
             }
+        }
+    }
+
+    public function webhookAction()
+    {
+        if ($this->request->has('addWeb')) {
+            $data = $this->request->getPost();
+            $arr = [];
+            foreach ($data as $key => $value) {
+                if ($value == "on") {
+                    array_push($arr, strtolower($key));
+                }
+            }
+            $this->mongo->webhook->insertOne([
+                "name" => $data['WebHook'],
+                "url" => $data['url'],
+                "key" => $data['key'],
+                "event" => $arr
+            ]);
         }
     }
 }

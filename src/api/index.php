@@ -2,13 +2,12 @@
 $_SERVER["REQUEST_URI"] = str_replace("/api/", "/", $_SERVER["REQUEST_URI"]);
 require './vendor/autoload.php';
 
-
-
 use Phalcon\Mvc\Micro;
 use Phalcon\Loader;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Events\Manager as EventsManager;
 
+//---------------------------------------------------------Loader------------------------------------------
 $loader = new Loader();
 $loader->registerNamespaces(
     [
@@ -18,10 +17,12 @@ $loader->registerNamespaces(
 );
 
 $loader->register();
+//---------------------------------------------------------Loader End------------------------------------------
 
 
 $container = new FactoryDefault();
 $app =  new Micro($container);
+//---------------------------------------------------------DataBase------------------------------------------
 
 $container->set(
     'mongo',
@@ -37,10 +38,13 @@ $container->set(
     },
     true
 );
+//---------------------------------------------------------DataBase End------------------------------------------
+
 
 $prod = new Api\Handlers\Product();
 $order = new Api\Handlers\Order();
 
+//----------------------------------------------------Validate User -----------------------------------------
 $eventsManager = new EventsManager();
 $eventsManager->attach(
     'micro',
@@ -50,7 +54,7 @@ $app->before(
     new Api\Components\MiddleWare()
 
 );
-
+//----------------------------------------------------Validating User End-----------------------------------------
 
 
 $app->get(
@@ -64,7 +68,7 @@ $app->get(
 
 
 $app->get(
-    '/api/createToken',
+    '/products/createToken',
     [
         $prod,
         'createToken'

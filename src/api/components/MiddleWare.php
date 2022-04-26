@@ -10,13 +10,23 @@ use Phalcon\Http\Response;
 use Phalcon\Http\Request;
 use MongoDB\BSON\ObjectID;
 
-$userMail = '';
-$UserNm = '';
+$userMail = '';         //Global Variable to declare the current user email
+$UserNm = '';           //Global Variable to declare the current user name
 
+
+/**
+ * MiddleWare class
+ * In order to authorize and validate user based on the token
+ */
 class MiddleWare implements MiddlewareInterface
 {
-
-    public function authorize($app)
+    /**
+     * authorize function
+     * In order to authorize the registering  user
+     * @param [type] $app
+     * @return void
+     */
+    public function authorize()
     {
         $key = "example_key";
         $payload = array(
@@ -25,41 +35,47 @@ class MiddleWare implements MiddlewareInterface
             "iat" => 1356999524,
             "nbf" => 1357000000,
             "role" => 'user',
-            "name" => 'Ashu',
-            "email" => 'abc@xyz.com',
+            "email" => "abc@xyz",
+            "name" => "ashu",
             "fsf" => "https://phalcon.io"
         );
-
-        /**
-         * IMPORTANT:
-         * You must specify supported algorithms for your application. See
-         * https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40
-         * for a list of spec-compliant algorithms.
-         */
         $jwt = JWT::encode($payload, $key, 'HS256');
-
-
-        $app->response->setStatusCode(400)
-            ->setJsonContent($jwt)
-            ->send();
+        return $jwt;
     }
+
+    /**
+     * Validate function
+     * To validate the user based on the token
+     * @param [type] $token
+     * @param [type] $app
+     * @return void
+     */
     public function validate($token, $app)
     {
         $key = "example_key";
-        $decoded = JWT::decode($token, new Key($key, 'HS256'));
-        $GLOBALS["userMail"] = $decoded->email;
-        $GLOBALS["userNm"] = $decoded->name;
-
+        try {
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+            $GLOBALS["userMail"] = $decoded->email;
+            $GLOBALS["userNm"] = $decoded->name;
+        } catch (\Exception $e) {
+            $app->response->setStatusCode(400)
+                ->setJsonContent($e->getMessage())
+                ->send();
+            die;
+        }
     }
+
+    /**
+     * To handle request response and show the errors if token is invalid
+     * @param Micro $app
+     * @return void
+     */
     public function call(Micro $app)
     {
-        // $token = $this->authorize($app);
-
         $check = explode('/', $app->request->get()['_url'])[2];
         if ($check == "create") {
             $response = new Response();
             $request = new Request();
-
             $getproduct = json_decode(json_encode($request->getJsonRawBody()), true);
             $checkproduct_id = ($getproduct['product_id']);
             try {
@@ -93,7 +109,13 @@ class MiddleWare implements MiddlewareInterface
                 $response->send();
                 die;
             }
-        } else {
+        } elseif ($check == "createToken") 
+        {  
+            
+            $token = $this->authorize();
+            die($token);
+        }
+        else {   
             $token =  $app->request->get("token");
             $this->validate($token, $app);
         }

@@ -6,14 +6,14 @@ use Phalcon\Di\Injectable;
 use MongoDB\BSON\ObjectID;
 
 /**
- * Producr Handler class
- * to handle all the product requests
+ * Order Controller
+ * to handle all the order requests
  */
 class Order extends Injectable
 {
     /**
-     * Get function
-     *To handle all the product get requests 
+     *Create function
+     *To place an order 
      */
     function create()
     {
@@ -37,6 +37,11 @@ class Order extends Injectable
         $this->response->send();
     }
 
+    /**
+     * Update function
+     * To update an order by API
+     * @return void
+     */
     function update()
     {
         $getproduct = json_decode(json_encode($this->request->getJsonRawBody()), true);

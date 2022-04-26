@@ -1,0 +1,32 @@
+<link href="../../../../application/public/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<!-- Custom styles for this template -->
+<link href="../../../../application/public/assets/css/signin.css" rel="stylesheet">
+
+<main class="form-signup text-center" style="margin-left: 40%;">
+    <form action="" method="post">
+        <h1 class="h3 mb-3 fw-normal">Add WebHook</h1>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="floatingUname" name="WebHook" required>
+            <label for="floatingPassword">WebHook Name</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="floatingUname" name="url" required>
+            <label for="floatingPassword">URL</label>
+        </div>
+        <div class="form-floating">
+            <p>Select Events</p>
+            <p><input type="checkbox" name="Update"> Update Product
+                <input type="checkbox" name="Create"> Create Product
+                <input type="checkbox" name="Delete"> Delete Product
+            </p>
+
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control m-0" id="floatingPassword" name="key" required>
+            <label for="floatingPassword">Secret Key</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" name="addWeb" type="submit">Add WebHook</button>
+
+
+    </form>
+</main>
