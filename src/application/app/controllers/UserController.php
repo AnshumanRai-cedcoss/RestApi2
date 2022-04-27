@@ -1,30 +1,17 @@
 <?php
 
 use Phalcon\Mvc\Controller;
-use Firebase\JWT\JWT;
 
 class UserController extends Controller
 {
-
     public function indexAction()
     {
         if ($this->request->has('addUser')) {
             $data = $this->request->getPost();
-            $key = "example_key";
-            $payload = array(
-                "iss" => "http://example.org",
-                "aud" => "https://target.phalcon.io",
-                "iat" => 1356999524,
-                "nbf" => 1357000000,
-                "role" => 'user',
-                "name" => $data["uName"],
-                "email" =>  $data["email"],
-                "fsf" => "https://phalcon.io"
-            );
-            $jwt = JWT::encode($payload, $key, 'HS256');
-
             $result = $this->mongo->users->findOne(["email" => $data['email']]);
             if (count($result) <= 0) {
+                $ob = new \App\Components\Helper;
+                $jwt = $ob->tokenValidate($data["uName"], $data['email']);
                 $this->mongo->users->insertOne([
                     "name" => $data['uName'],
                     "email" => $data['email'],
@@ -33,12 +20,16 @@ class UserController extends Controller
                     "token" => $jwt
                 ]);
                 $this->view->token = $jwt;
+            } else {
+                $this->view->message = "Email already exists!Please sign in";
             }
         }
     }
 
     public function webhookAction()
     {
+        $ob = new App\Components\Helper;
+        $ob->validate();
         if ($this->request->has('addWeb')) {
             $data = $this->request->getPost();
             $arr = [];
@@ -54,5 +45,16 @@ class UserController extends Controller
                 "event" => $arr
             ]);
         }
+    }
+
+    public function errorAction()
+    {
+    }
+
+    public function signOutAction()
+    {
+        $this->session->remove('user');
+        $this->session->destroy();
+        $this->response->redirect('application/login');
     }
 }

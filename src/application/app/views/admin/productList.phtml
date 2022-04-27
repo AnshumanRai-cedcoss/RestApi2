@@ -14,7 +14,8 @@
                             <th scope="col">Name</th>
                             <th scope="col">Price</th>
                             <th scope="col">Stock</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">EDIT</th>
+                            <th scope="col">DELETE</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -23,12 +24,12 @@
                         foreach ($products as $k => $v) {
                         ?>
                             <tr>
-                                <td> <?php echo $v["_id"] ?></td>
-                                <td> <?php echo $v['name']  ?></td>
-                                <td> <?php echo $v['price']  ?></td>
-                                <td> <?php echo $v['stock']  ?></td>
-                                <td> <a class="btn btn-primary" href="updateProd?id=<?php echo $v["_id"]?>">EDIT</a></td>
-                               
+                                <td><?php echo $v["_id"] ?></td>
+                                <td><?php echo $v['name']  ?></td>
+                                <td><?php echo $v['price']  ?></td>
+                                <td><?php echo $v['stock']  ?></td>
+                                <td><a class="btn btn-primary" href="updateProd?id=<?php echo $v["_id"]?>">EDIT</a></td>
+                                <td><a class="btn btn-danger" href="deleteProd?id=<?php echo $v["_id"]?>">DELETE</a></td>
                             <?php  }
                             ?>
                     </tbody>

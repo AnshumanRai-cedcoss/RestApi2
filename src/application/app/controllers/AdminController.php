@@ -10,12 +10,15 @@ use Phalcon\Events\Manager as EventsManager;
  */
 class AdminController extends Controller
 {
+
   /**
    * To view all orders for admin
    * @return void
    */
   public function indexAction()
   {
+    $ob = new App\Components\Helper;
+    $ob->validateAdmin();
     $this->view->orders = $this->mongo->orders->find()->toArray();
   }
 
@@ -26,6 +29,8 @@ class AdminController extends Controller
    */
   public function addProductAction()
   {
+    $ob = new App\Components\Helper;
+    $ob->validateAdmin();
     if ($this->request->has('add')) {
       $data = $this->request->getPost();
       $this->mongo->product->insertOne([
@@ -41,7 +46,7 @@ class AdminController extends Controller
         new \App\Components\NotificationsListener()
       );
       $com->addNew();
-    $this->response->redirect("http://".BASE_URI.'/application/admin');
+      $this->response->redirect("http://" . BASE_URI . '/application/admin/productList');
     }
   }
 
@@ -53,8 +58,35 @@ class AdminController extends Controller
    */
   public function productListAction()
   {
+    $ob = new App\Components\Helper;
+    $ob->validateAdmin();
     $this->view->products = $this->mongo->product->find()->toArray();
   }
+
+  /**
+   * deleting the product by admin
+   * product id is must
+   * @return void
+   */
+  public function deleteProdAction()
+  {
+    $ob = new App\Components\Helper;
+    $ob->validateAdmin();
+    $id = $this->request->get("id");
+    $this->mongo->product->deleteOne(
+      ["_id" => new ObjectID($id)]
+    );
+    $eventsManager = new EventsManager();
+    $com = new \App\Components\Loader();
+    $com->setEventsManager($eventsManager);
+    $eventsManager->attach(
+      'notifications',
+      new \App\Components\NotificationsListener()
+    );
+    $com->deleteProduct();
+    $this->response->redirect("http://" . BASE_URI . '/application/admin/productList');
+  }
+
 
   /**
    * Change Status
@@ -63,12 +95,14 @@ class AdminController extends Controller
    */
   public function statusChangeAction()
   {
+    $ob = new App\Components\Helper;
+    $ob->validateAdmin();
     $data = $this->request->getPost();
     $this->mongo->orders->updateOne(
       ["_id" => new ObjectID($data['id'])],
       ['$set' => ["status" => ($data['status'])]]
     );
-    $this->response->redirect("http://".BASE_URI.'/application/admin');
+    $this->response->redirect("http://" . BASE_URI . '/application/admin');
   }
 
   /**
@@ -78,6 +112,8 @@ class AdminController extends Controller
    */
   public function updateProdAction()
   {
+    $ob = new App\Components\Helper;
+    $ob->validateAdmin();
     $id = $this->request->get("id");
     $result = $this->mongo->product->findOne(['_id' => new ObjectID($id)]);
     $this->view->data = (array)$result;
@@ -87,14 +123,15 @@ class AdminController extends Controller
         ["_id" => new ObjectID($id)],
         ['$set' => ["name" => $res['name'], "price" => $res["price"], "stock" => $res['stock']]]
       );
+      $eventsManager = new EventsManager();
+      $com = new \App\Components\Loader();
+      $com->setEventsManager($eventsManager);
+      $eventsManager->attach(
+        'notifications',
+        new \App\Components\NotificationsListener()
+      );
+      $com->processRequest();
+      $this->response->redirect("http://" . BASE_URI . '/application/admin/productList');
     }
-    $eventsManager = new EventsManager();
-    $com = new \App\Components\Loader();
-    $com->setEventsManager($eventsManager);
-    $eventsManager->attach(
-      'notifications',
-      new \App\Components\NotificationsListener()
-    );
-    $com->processRequest();
   }
 }

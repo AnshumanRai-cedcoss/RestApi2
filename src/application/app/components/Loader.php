@@ -35,6 +35,11 @@ class Loader extends Injectable
     {
         return  $this->eventsManager->fire('notifications:add', $this);
     }
+
+    public function deleteProduct()
+    {
+        return  $this->eventsManager->fire('notifications:delete', $this);
+    }
   
    
 }

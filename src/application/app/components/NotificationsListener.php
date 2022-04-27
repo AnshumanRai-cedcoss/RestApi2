@@ -19,12 +19,34 @@ class NotificationsListener extends Injectable
         $client = new Client();
         foreach ($webhooks as $key => $value) {
             $action = (array)$value["event"];
-            if ($action[0] == "update") {
-                $client->request(
-                    'POST',
-                    $value['url'],
-                    ["form_params" => ["data" => json_encode($products)]]
-                );
+            foreach ($action as $key => $v) {
+                if ($v == "update") {
+                    $client->request(
+                        'POST',
+                        $value['url'] . $v,
+                        ["form_params" => ["data" => json_encode($products)]]
+                    );
+                }
+            }
+        }
+    }
+
+
+    public function delete()
+    {
+        $id = $this->request->get('id');
+        $webhooks = $this->mongo->webhook->find()->toArray();
+        $client = new Client();
+        foreach ($webhooks as $key => $value) {
+            $action = (array)$value["event"];
+            foreach ($action as $key => $v) {
+                if ($v == "delete") {
+                    $client->request(
+                        'POST',
+                        $value['url'] . $v,
+                        ["form_params" => ["data" => $id]]
+                    );
+                }
             }
         }
     }
@@ -45,13 +67,14 @@ class NotificationsListener extends Injectable
         $client = new Client();
         foreach ($webhooks as $key => $value) {
             $action = (array)$value["event"];
-            if ($action[0] == "create") {
-                echo $value["url"];
-                $client->request(
-                    'POST',
-                    $value['url'],
-                    ["form_params" => ["data" => json_encode($data)]]
-                );
+            foreach ($action as $key => $v) {
+                if ($v == "create") {
+                    $client->request(
+                        'POST',
+                        $value['url'] . $v,
+                        ["form_params" => ["data" => json_encode($data)]]
+                    );
+                }
             }
         }
     }

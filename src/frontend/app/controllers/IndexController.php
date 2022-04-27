@@ -11,12 +11,20 @@ class IndexController extends Controller
     $this->view->products = $this->mongo->product->find()->toArray();
   }
 
-  public function addNewAction()
+  public function deleteAction()
+  {
+    $data = $this->request->getPost("data");
+    $this->mongo->product->deleteOne(
+      ["_id" => new ObjectID($data)]
+    );
+  }
+
+  public function createAction()
   {
     $data = json_decode($this->request->getPost("data"), true);
-      $this->mongo->product->insertOne(
-        ["_id" => new ObjectID($data['_id']['$oid']),"name" => $data['name'], "price" => $data["price"], "stock" => $data['stock']]
-      );
+    $this->mongo->product->insertOne(
+      ["_id" => new ObjectID($data['_id']['$oid']), "name" => $data['name'], "price" => $data["price"], "stock" => $data['stock']]
+    );
   }
 
   public function updateAction()
