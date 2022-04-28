@@ -20,7 +20,7 @@ class LoginController extends Controller
        */
       if (!$a == null && $a->role == "admin") {
         $this->session->set('user', ['role' => 'admin']);  //setting session for admin
-        $this->response->redirect("http://" . BASE_URI . "/application/admin");
+        $this->response->redirect(BASE_URI . "admin");
       } else if (!$a == null && $a->role == "user") {
         $token = $a->token;
         $this->session->set('user', ['role' => 'user']);   //setting session for user
@@ -29,7 +29,7 @@ class LoginController extends Controller
           $decoded = JWT::decode($token, new Key($key, 'HS256'));
           $GLOBALS["userMail"] = $decoded->email;
           $GLOBALS["userNm"] = $decoded->name;
-          $this->response->redirect("http://" . BASE_URI . "/application/user/webhook");
+          $this->response->redirect(BASE_URI . "user/webhook");
         } catch (\Exception $e) {
           $this->response->setStatusCode(400)
             ->setJsonContent($e->getMessage())

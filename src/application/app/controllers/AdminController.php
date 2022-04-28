@@ -46,7 +46,7 @@ class AdminController extends Controller
         new \App\Components\NotificationsListener()
       );
       $com->addNew();
-      $this->response->redirect("http://" . BASE_URI . '/application/admin/productList');
+      $this->response->redirect( BASE_URI . 'admin/productList');
     }
   }
 
@@ -84,7 +84,7 @@ class AdminController extends Controller
       new \App\Components\NotificationsListener()
     );
     $com->deleteProduct();
-    $this->response->redirect("http://" . BASE_URI . '/application/admin/productList');
+    $this->response->redirect(BASE_URI . 'admin/productList');
   }
 
 
@@ -102,7 +102,7 @@ class AdminController extends Controller
       ["_id" => new ObjectID($data['id'])],
       ['$set' => ["status" => ($data['status'])]]
     );
-    $this->response->redirect("http://" . BASE_URI . '/application/admin');
+    $this->response->redirect( BASE_URI . 'admin');
   }
 
   /**
@@ -131,7 +131,7 @@ class AdminController extends Controller
         new \App\Components\NotificationsListener()
       );
       $com->processRequest();
-      $this->response->redirect("http://" . BASE_URI . '/application/admin/productList');
+      $this->response->redirect( BASE_URI . 'admin/productList');
     }
   }
 }

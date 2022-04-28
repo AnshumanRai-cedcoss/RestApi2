@@ -24,7 +24,7 @@ class Order extends Injectable
             "product_id" => $getproduct['product_id'],
             "quantity" => $getproduct['quantity'],
             'date' => date('d-m-Y'),
-            "status" => 'paid'
+            "status" => 'Paid'
         ]);
 
         $res = " Order id:" . $result->getInsertedId() . "";

@@ -31,9 +31,10 @@
     if (isset($message))
         echo $message ?>
 </p>
-
 <p class="text-success text-center">
     <?php
-    if (isset($success))
-        echo $success ?>
+    if (isset($success)) {
+        echo $success['status'] . "<br>";
+        echo $success['data'];
+    } ?>
 </p>

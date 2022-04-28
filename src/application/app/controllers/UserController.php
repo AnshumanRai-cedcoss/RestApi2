@@ -55,6 +55,6 @@ class UserController extends Controller
     {
         $this->session->remove('user');
         $this->session->destroy();
-        $this->response->redirect('application/login');
+        $this->response->redirect('index');
     }
 }

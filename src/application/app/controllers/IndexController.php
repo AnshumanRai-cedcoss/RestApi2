@@ -34,10 +34,7 @@ class IndexController extends Controller
             ["body" => json_encode($body)]
           );
           $res = json_decode($result->getBody(), true);
-          echo "<pre>";
-          print_r($res);
-          die;
-          $this->view->success = "Order placed successfully";
+          $this->view->success = $res;
         }
       } else {
         $this->view->message = "Not a valid email";

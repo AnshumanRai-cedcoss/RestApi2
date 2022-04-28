@@ -1,4 +1,17 @@
 <link href="../../../../application/public/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<header class="navbar navbar-dark sticky-t
+          //  echo $did ;op bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Cedcoss Technology</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+            <a class="nav-link px-3" href="<?php echo BASE_URI ?>user/signOut">Sign out</a>
+        </div>
+    </div>
+</header>
+
 <div class="container-fluid">
     <div class="row">
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
@@ -10,7 +23,7 @@
                     <li class="nav-item">
                         <?php echo $this->tag->linkTo(
                             [
-                                "application/admin/index",
+                                "admin/index",
                                 "Orders",
                                 "class" => "nav-link"
                             ]
@@ -19,19 +32,9 @@
                     <li class="nav-item">
                         <?php echo $this->tag->linkTo(
                             [
-                                "application/admin/productList",
+                                "admin/productList",
                                 "Products",
                                 "class" => "nav-link"
-                            ]
-                        ); ?>
-                    </li>
-                    <li class="nav-item">
-                        <?php echo $this->tag->linkTo(
-                            [
-                                "application/user/signOut",
-                                "Sign Out",
-                                "class" => "btn btn-danger",
-                                "style" => "margin-top:30%;"
                             ]
                         ); ?>
                     </li>

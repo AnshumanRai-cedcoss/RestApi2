@@ -17,7 +17,7 @@ require_once('../vendor/autoload.php');
 // Define some absolute path constants to aid in locating resources
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
-define('BASE_URI', $_SERVER["HTTP_HOST"]);
+define('BASE_URI', 'http://'.$_SERVER["HTTP_HOST"].'/application/');
 
 // Register an autoloader
 $loader = new Loader();

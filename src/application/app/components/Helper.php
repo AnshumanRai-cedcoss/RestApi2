@@ -18,7 +18,7 @@ class Helper extends Injectable
     public function validate()
     {
         if (!isset($this->session->user)) {
-            $this->response->redirect("application/login");
+            $this->response->redirect(BASE_URI."login");
         }
     }
 
@@ -42,7 +42,7 @@ class Helper extends Injectable
     public function validateAdmin()
     {
         if (!isset($this->session->user) || $this->session->user["role"] != "admin") {
-            $this->response->redirect("application/user/error");
+            $this->response->redirect(BASE_URI."user/error");
         }
     }
 }
